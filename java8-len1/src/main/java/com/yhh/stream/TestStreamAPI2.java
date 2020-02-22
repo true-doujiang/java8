@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.junit.Test;
 import com.yhh.stream.Employee.Status;
@@ -125,6 +127,12 @@ public class TestStreamAPI2 {
                 .collect(Collectors.maxBy((e1, e2) -> Double.compare(e1.getSalary(), e2.getSalary())));
 		System.out.println(op.get());
 
+        Optional<Double> od = emps.stream()
+                .map(Employee::getSalary)
+                .collect(Collectors.maxBy(Double::compare));
+
+        System.out.println(od.get());
+
         System.out.println("--------------------------------------------");
 
         //统计工资的最大值 、最小值、 平均值、 总数.....
@@ -141,6 +149,10 @@ public class TestStreamAPI2 {
 		Map<Status, List<Employee>> map = emps.stream()
 			.collect(Collectors.groupingBy(Employee::getStatus));
 		System.out.println(map);
+
+        Function<Employee, Status> f = Employee::getStatus;
+        Map<Status, List<Employee>> map2 = emps.stream().collect(Collectors.groupingBy(f));
+        System.out.println(map2);
 	}
 	
 	//多级分组
@@ -160,13 +172,19 @@ public class TestStreamAPI2 {
 	}
 
     /**
-     *  分区
+     *  分区(收集)
      */
 	@Test
 	public void test7(){
 		Map<Boolean, List<Employee>> map = emps.stream()
 			.collect(Collectors.partitioningBy((e) -> e.getSalary() >= 5000));
 		System.out.println(map);
+
+        Predicate<Employee> p = e -> e.getSalary() >= 5000;
+
+        Map<Boolean, List<Employee>> map2 = emps.stream()
+                .collect(Collectors.partitioningBy(p));
+        System.out.println(map2);
 	}
 	
 	//
