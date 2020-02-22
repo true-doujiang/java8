@@ -226,12 +226,16 @@ public class TestStreamAPI {
         Optional<Employee> op = emps2.stream()
                 .sorted((e1, e2) -> Double.compare(e1.getSalary(), e2.getSalary()))
                 .findFirst();
+
+        // emps2 集合要是空的  这里会有空指针异常
         Employee e1 = op.get();
-        Employee e2 = op.orElse(new Employee());  //可以放在空指针异常
+        // emps2 集合要是空的  而这里不会有空指针异常
+        Employee e2 = op.orElse(new Employee());
         System.out.println(e2);
 
         System.out.println("--------------------------------");
 
+        // 串行多次any出来的是同一个     并行多次any出来的就不是同一个了
         Optional<Employee> op2 = emps2.parallelStream()
                 .filter((e) -> e.getStatus().equals(Status.FREE))
                 .findAny();
