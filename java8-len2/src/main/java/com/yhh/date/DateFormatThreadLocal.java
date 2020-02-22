@@ -7,17 +7,15 @@ import java.util.Date;
 
 public class DateFormatThreadLocal {
 	
-	private static final ThreadLocal<DateFormat> df = new ThreadLocal<DateFormat>(){
-
-	    //这个方法看下
+	private static final ThreadLocal<DateFormat> threadLocalDf = new ThreadLocal<DateFormat>(){
+	    // 这个方法看下
 		protected DateFormat initialValue(){
 			return new SimpleDateFormat("yyyyMMdd");
 		}
-		
 	};
 	
 	public static final Date convert(String source) throws ParseException{
-		return df.get().parse(source);
+		return threadLocalDf.get().parse(source);
 	}
 
 }
